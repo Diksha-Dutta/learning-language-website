@@ -1,0 +1,44 @@
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+build/
+**/dist/
+**/build/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+**/.env*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# IDE / Editor
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# OS / Misc
+*.bak
+*.tmp
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional: if you use Vite
+.vite/
+
+# Optional: if using testing tools
+coverage/
+jest-cache/
