@@ -44,7 +44,7 @@ const App = () => {
   });
   const [theme, setTheme] = useState('light');
 
-  const API_URL = 'http://localhost:3000/api';
+  const API_URL = 'https://learning-language-website.onrender.com/api';;
 
  
   useEffect(() => {
@@ -1503,24 +1503,24 @@ const LessonView = () => {
     setIsCorrectAnswer(index === currentQuestion.correct);
     setShowAnswerFeedback(true);
     
-    // If correct, automatically move to completion after a short delay
+   
     if (index === currentQuestion.correct) {
       setTimeout(() => {
         setLessonCompleted(true);
-      }, 1500); // 1.5 second delay to show the success message
+      }, 1500); 
     }
   };
 
   const handleContinue = async () => {
     if (currentQuestionIndex < questions.length - 1) {
-      // Move to next question
+    
       await completeLesson(currentLesson || 'sentence', 10);
       setCurrentQuestionIndex(prev => prev + 1);
       setLessonCompleted(false);
       setSelectedAnswer(null);
       setShowAnswerFeedback(false);
     } else {
-      // Completed all questions
+     
       await completeLesson(currentLesson || 'sentence', 10);
       setCurrentQuestionIndex(0);
       setLessonCompleted(false);

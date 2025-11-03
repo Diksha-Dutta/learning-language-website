@@ -14,7 +14,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = 'http://localhost:3000/api';
+  const API_URL = 'https://learning-language-website.onrender.com/api';
 
   const quizQuestions = {
     spanish: [
@@ -224,7 +224,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
 
   const loadQuizData = async () => {
     try {
-      // Load attempts for today
+    
       const attemptsRes = await fetch(`${API_URL}/quiz/attempts/today`, {
         headers: { Authorization: `Bearer ${authToken}` }
       });
@@ -235,7 +235,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
         setTodaysPassed(attemptsData.passed);
       }
 
-      // Load streak
+     
       const streakRes = await fetch(`${API_URL}/quiz/streak`, {
         headers: { Authorization: `Bearer ${authToken}` }
       });
@@ -246,7 +246,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
         setUnlockedBadges(streakData.unlockedBadges || []);
       }
 
-      // Load leaderboard
+     
       const leaderboardRes = await fetch(`${API_URL}/quiz/leaderboard`, {
         headers: { Authorization: `Bearer ${authToken}` }
       });
@@ -301,7 +301,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
     const passed = score >= 75;
     const timeSpent = startTime ? Math.floor((Date.now() - startTime) / 1000) : 300 - timeLeft;
     
-    // Prepare answers data
+   
     const answersData = answers.map((answer, index) => ({
       questionIndex: index,
       userAnswer: answer,
@@ -327,7 +327,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
       if (response.ok) {
         const data = await response.json();
         
-        // Update local state
+        
         setAttemptsToday(prev => prev + 1);
         
         if (passed) {
@@ -338,7 +338,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
           }
         }
 
-        // Reload leaderboard
+     
         await loadLeaderboard();
       } else {
         const error = await response.json();
@@ -395,7 +395,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
     );
   }
 
-  // HOME VIEW
+  
   if (quizState === 'home') {
     return (
       <div className="space-y-6">
@@ -434,7 +434,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
           </div>
         </div>
 
-        {/* Leaderboard */}
+      
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
           <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
             <Trophy className="text-yellow-500" size={24} />
@@ -477,7 +477,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
           )}
         </div>
 
-        {/* Streak Rewards */}
+       
         {consecutiveDays > 0 && (
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-300 dark:border-green-700 rounded-2xl p-6">
             <h3 className="text-lg font-bold text-green-800 dark:text-green-300 mb-4 flex items-center gap-2">
@@ -511,7 +511,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
           </div>
         )}
 
-        {/* Start Quiz Button */}
+       
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
           {todaysPassed ? (
             <div className="text-center py-8">
@@ -570,13 +570,13 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
     );
   }
 
-  // TAKING QUIZ VIEW
+ 
   if (quizState === 'taking') {
     const currentQ = questions[currentQuestion];
 
     return (
       <div className="space-y-6">
-        {/* Timer and Progress */}
+      
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -600,7 +600,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
           </div>
         </div>
 
-        {/* Question */}
+       
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
           <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">
             {currentQ.question}
@@ -634,7 +634,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
           </div>
         </div>
 
-        {/* Navigation */}
+        
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
           <div className="flex gap-3">
             <button
@@ -662,7 +662,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
             )}
           </div>
 
-          {/* Question Navigator */}
+        
           <div className="grid grid-cols-10 gap-2 mt-4">
             {questions.map((_, index) => (
               <button
@@ -685,7 +685,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
     );
   }
 
-  // RESULTS VIEW
+ 
   if (quizState === 'results') {
     const score = calculateScore();
     const passed = score >= 75;
@@ -759,7 +759,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
           </button>
         </div>
 
-        {/* Detailed Results */}
+      
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
           <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
             Review Your Answers
@@ -810,7 +810,7 @@ const Quiz = ({ authToken, currentUser, currentLanguage }) => {
           </div>
         </div>
 
-        {/* Next Steps */}
+      
         <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-2 border-blue-300 dark:border-blue-700 rounded-2xl p-6">
           <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-3">
             {passed ? '🎯 What\'s Next?' : '📚 Keep Learning!'}

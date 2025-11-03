@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000', // ← change if you use different port
+        target: 'http://localhost:3000','https://learning-language-website.onrender.com' // ← change if you use different port
         changeOrigin: true,
         secure: false,
       },

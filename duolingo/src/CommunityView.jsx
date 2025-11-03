@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, Send, User } from 'lucide-react';
 
-const API = 'http://localhost:3000/api';
+const API = 'https://learning-language-website.onrender.com/api';
 
 const CommunityView = ({ authToken, currentUser, setCurrentView }) => {
   const [questions, setQuestions] = useState([]);
