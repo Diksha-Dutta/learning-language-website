@@ -572,7 +572,7 @@ app.put('/api/community/questions/:qid/answers/:aid', authenticateToken, async (
   }
 });
 
-// Quiz Schema
+
 const quizAttemptSchema = new mongoose.Schema({
   userId: { 
     type: mongoose.Schema.Types.ObjectId, 
@@ -604,7 +604,7 @@ const quizAttemptSchema = new mongoose.Schema({
     correct: Boolean
   }],
   timeSpent: { 
-    type: Number, // in seconds
+    type: Number, 
     default: 0 
   }
 }, { 
@@ -616,7 +616,7 @@ quizAttemptSchema.index({ score: -1 });
 
 const QuizAttempt = mongoose.model('QuizAttempt', quizAttemptSchema);
 
-// Quiz Streak Schema
+
 const quizStreakSchema = new mongoose.Schema({
   userId: { 
     type: mongoose.Schema.Types.ObjectId, 
@@ -641,9 +641,7 @@ const quizStreakSchema = new mongoose.Schema({
 
 const QuizStreak = mongoose.model('QuizStreak', quizStreakSchema);
 
-// ==================== QUIZ ROUTES ====================
 
-// Get user's quiz attempts for today
 app.get('/api/quiz/attempts/today', authenticateToken, async (req, res) => {
   try {
     const today = new Date();
@@ -675,7 +673,7 @@ app.get('/api/quiz/attempts/today', authenticateToken, async (req, res) => {
   }
 });
 
-// Submit quiz attempt
+
 app.post('/api/quiz/submit', authenticateToken, async (req, res) => {
   try {
     const { language, score, passed, answers, timeSpent } = req.body;
@@ -684,7 +682,7 @@ app.post('/api/quiz/submit', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Check attempts today
+   
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
@@ -699,7 +697,7 @@ app.post('/api/quiz/submit', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Maximum attempts reached for today' });
     }
 
-    // Check if already passed today
+  
     const passedToday = await QuizAttempt.findOne({
       userId: req.user.id,
       date: { $gte: today, $lt: tomorrow },
@@ -710,7 +708,6 @@ app.post('/api/quiz/submit', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Already passed today' });
     }
 
-    // Create quiz attempt
     const attempt = new QuizAttempt({
       userId: req.user.id,
       date: today,
@@ -723,7 +720,7 @@ app.post('/api/quiz/submit', authenticateToken, async (req, res) => {
 
     await attempt.save();
 
-    // Update streak if passed
+   
     let streakData = null;
     if (passed) {
       streakData = await updateQuizStreak(req.user.id);
@@ -746,7 +743,7 @@ app.post('/api/quiz/submit', authenticateToken, async (req, res) => {
   }
 });
 
-// Get quiz streak
+
 app.get('/api/quiz/streak', authenticateToken, async (req, res) => {
   try {
     let streak = await QuizStreak.findOne({ userId: req.user.id });
@@ -771,10 +768,9 @@ app.get('/api/quiz/streak', authenticateToken, async (req, res) => {
   }
 });
 
-// Get leaderboard (top 3)
 app.get('/api/quiz/leaderboard', authenticateToken, async (req, res) => {
   try {
-    // Get best score for each user in the last 7 days
+  
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
@@ -826,7 +822,7 @@ app.get('/api/quiz/leaderboard', authenticateToken, async (req, res) => {
   }
 });
 
-// Helper function to update quiz streak
+
 async function updateQuizStreak(userId) {
   try {
     let streak = await QuizStreak.findOne({ userId });
@@ -850,27 +846,27 @@ async function updateQuizStreak(userId) {
       lastCompleted.setHours(0, 0, 0, 0);
     }
 
-    // If already completed today, don't update
+   
     if (lastCompleted && lastCompleted.getTime() === today.getTime()) {
       return streak;
     }
 
-    // Check if yesterday
+    
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
     if (lastCompleted && lastCompleted.getTime() === yesterday.getTime()) {
-      // Continue streak
+      
       streak.consecutiveDays += 1;
     } else if (!lastCompleted || lastCompleted.getTime() < yesterday.getTime()) {
-      // Streak broken, restart
+      
       streak.consecutiveDays = 1;
       streak.unlockedBadges = [];
     }
 
     streak.lastCompletedDate = today;
 
-    // Unlock badges
+   
     if (streak.consecutiveDays >= 3 && !streak.unlockedBadges.includes('bronze')) {
       streak.unlockedBadges.push('bronze');
     }
@@ -931,7 +927,7 @@ app.put('/api/settings', authenticateToken, async (req, res) => {
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/build')));
 
-  app.get('*', (req, res) => {
+  app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
